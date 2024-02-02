@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=3 uid="uid://cd6rtoxbw352i"]
+
+[ext_resource type="Script" path="res://scripts/uniforms_ctl.gd" id="1_iscjk"]
+
+[node name="cc" type="CenterContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_iscjk")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(180, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 2
+alignment = 1
+
+[node name="label" type="Label" parent="vbox"]
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="slider" type="HSlider" parent="vbox"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 1
+scrollable = false
+
+[node name="hbox" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+alignment = 1
+
+[node name="l1" type="LineEdit" parent="vbox/hbox"]
+layout_mode = 2
+max_length = 5
+expand_to_text_length = true
+context_menu_enabled = false
+
+[connection signal="drag_ended" from="vbox/slider" to="." method="_on_slider_value_changed"]
+[connection signal="text_submitted" from="vbox/hbox/l1" to="." method="values_changed"]

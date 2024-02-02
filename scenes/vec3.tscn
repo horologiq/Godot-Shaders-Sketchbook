@@ -1,0 +1,50 @@
+[gd_scene load_steps=2 format=3 uid="uid://ddmtlqfd575nt"]
+
+[ext_resource type="Script" path="res://scripts/uniforms_ctl.gd" id="1_ubt4c"]
+
+[node name="cc" type="CenterContainer"]
+offset_right = 209.0
+offset_bottom = 100.0
+script = ExtResource("1_ubt4c")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 2
+alignment = 1
+
+[node name="label" type="Label" parent="vbox"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="hbox" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+alignment = 1
+
+[node name="l1" type="LineEdit" parent="vbox/hbox"]
+layout_mode = 2
+max_length = 5
+expand_to_text_length = true
+context_menu_enabled = false
+
+[node name="l2" type="LineEdit" parent="vbox/hbox"]
+layout_mode = 2
+max_length = 5
+expand_to_text_length = true
+context_menu_enabled = false
+
+[node name="l3" type="LineEdit" parent="vbox/hbox"]
+layout_mode = 2
+max_length = 5
+expand_to_text_length = true
+context_menu_enabled = false
+
+[node name="color3" type="ColorPickerButton" parent="vbox"]
+layout_mode = 2
+text = "."
+
+[connection signal="text_submitted" from="vbox/hbox/l1" to="." method="values_changed"]
+[connection signal="text_submitted" from="vbox/hbox/l2" to="." method="values_changed"]
+[connection signal="text_submitted" from="vbox/hbox/l3" to="." method="values_changed"]
+[connection signal="popup_closed" from="vbox/color3" to="." method="_on_color_color_changed"]

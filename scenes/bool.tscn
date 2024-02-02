@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://cqx54tp4iefok"]
+
+[ext_resource type="Script" path="res://scripts/uniforms_ctl.gd" id="1_chmrj"]
+
+[node name="cc" type="CenterContainer"]
+offset_top = 351.0
+offset_right = 1152.0
+offset_bottom = 351.0
+script = ExtResource("1_chmrj")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 2
+alignment = 1
+
+[node name="label" type="Label" parent="vbox"]
+layout_mode = 2
+
+[node name="bool" type="CheckButton" parent="vbox"]
+layout_mode = 2
+
+[connection signal="toggled" from="vbox/bool" to="." method="_on_bool_toggled"]

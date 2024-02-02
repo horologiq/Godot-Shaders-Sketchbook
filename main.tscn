@@ -1,0 +1,545 @@
+[gd_scene load_steps=28 format=3 uid="uid://d264fpnvv0eoe"]
+
+[ext_resource type="Theme" uid="uid://d1qpw35l7ja7y" path="res://theme/gss.tres" id="1_1dx6c"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_5g2jr"]
+[ext_resource type="Material" uid="uid://dwqtjhujebt4k" path="res://material/spatial_cube.tres" id="3_dhedx"]
+[ext_resource type="Material" uid="uid://0mc2oe3agaci" path="res://material/spatial_cam.tres" id="5_ua2ql"]
+[ext_resource type="Texture2D" uid="uid://bj844xmc7q872" path="res://theme/quill.png" id="6_smwmn"]
+[ext_resource type="Texture2D" uid="uid://ce0is5v7dseet" path="res://theme/save.png" id="7_5qqym"]
+[ext_resource type="Texture2D" uid="uid://lfktf3dvgeq5" path="res://theme/chest.png" id="7_oon7y"]
+[ext_resource type="Shader" path="res://material/def_grid.gdshader" id="7_oyry5"]
+[ext_resource type="Script" path="res://scripts/code.gd" id="8_0svi2"]
+[ext_resource type="Texture2D" uid="uid://b17ycsl2kvs4k" path="res://theme/bow.png" id="8_s1yjo"]
+[ext_resource type="Texture2D" uid="uid://djmbr0hbihc2e" path="res://theme/saveas.png" id="9_4ag6f"]
+[ext_resource type="Texture2D" uid="uid://rs8q1t2bc5vb" path="res://theme/eye.png" id="9_j5d2a"]
+[ext_resource type="Script" path="res://scripts/uniforms_ui.gd" id="9_jcgio"]
+[ext_resource type="Script" path="res://scripts/debug.gd" id="10_upjqj"]
+[ext_resource type="Texture2D" uid="uid://dh2c1w6l1lxdx" path="res://theme/question.png" id="11_pytqv"]
+
+[sub_resource type="Shader" id="Shader_755mh"]
+code = "shader_type canvas_item;
+
+void vertex() {
+
+}
+
+void fragment() {
+
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8vwng"]
+shader = SubResource("Shader_755mh")
+
+[sub_resource type="QuadMesh" id="QuadMesh_ptngd"]
+lightmap_size_hint = Vector2i(12, 12)
+material = ExtResource("5_ua2ql")
+flip_faces = true
+size = Vector2(2, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_536dj"]
+albedo_color = Color(0.732051, 0.549465, 0, 1)
+metallic = 1.0
+roughness = 0.23
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n0l7d"]
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l7uku"]
+albedo_color = Color(0, 0, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gii3b"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_ot784"]
+size = Vector2(250, 250)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_x16jm"]
+render_priority = 0
+shader = ExtResource("7_oyry5")
+shader_parameter/subdivisions = 64.0
+shader_parameter/grid_width = 0.02
+shader_parameter/background_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/background_color_two = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/grid_color = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 1.0
+shader_parameter/point_width = 0.021
+shader_parameter/point_color = Color(0, 0, 0, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3w1pd"]
+
+[sub_resource type="Sky" id="Sky_aoi0a"]
+sky_material = SubResource("ProceduralSkyMaterial_3w1pd")
+
+[sub_resource type="Environment" id="Environment_1egjd"]
+background_mode = 2
+background_color = Color(0.37664, 0.611786, 1, 1)
+sky = SubResource("Sky_aoi0a")
+tonemap_mode = 3
+fog_enabled = true
+fog_light_energy = 0.63
+fog_sky_affect = 0.0
+volumetric_fog_density = 0.0235
+
+[node name="main" type="Node"]
+script = ExtResource("1_5g2jr")
+
+[node name="ui" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_1dx6c")
+
+[node name="canvas_item" type="SubViewportContainer" parent="ui"]
+material = SubResource("ShaderMaterial_8vwng")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="sv" type="SubViewport" parent="ui/canvas_item"]
+handle_input_locally = false
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="cam" type="Camera3D" parent="ui/canvas_item/sv"]
+transform = Transform3D(0.707107, -0.0739128, -0.703233, 0, 0.994522, -0.104528, 0.707107, 0.0739128, 0.703233, -4.79639, 2.07894, -2.65216)
+
+[node name="cam_mesh" type="MeshInstance3D" parent="ui/canvas_item/sv/cam"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0944285, 0.147021, -1.27526)
+visible = false
+mesh = SubResource("QuadMesh_ptngd")
+skeleton = NodePath("")
+
+[node name="cube" type="CSGBox3D" parent="ui/canvas_item/sv"]
+transform = Transform3D(0.515286, 0.175946, 0.838762, -0.856376, 0.143581, 0.495989, -0.0331619, -0.973873, 0.224662, -2.66136, 2.2908, -3.22689)
+material = ExtResource("3_dhedx")
+
+[node name="light" type="DirectionalLight3D" parent="ui/canvas_item/sv"]
+transform = Transform3D(-0.792048, -0.0592061, -0.607581, -0.578703, -0.244005, 0.77818, -0.194326, 0.967965, 0.159001, -0.486834, 10.5751, 3.74236)
+
+[node name="ball" type="CSGSphere3D" parent="ui/canvas_item/sv"]
+transform = Transform3D(0.693955, 0, -0.720018, 0, 1, 0, 0.720018, 0, 0.693955, 40.9083, 26.9181, -41.9142)
+radius = 22.1549
+radial_segments = 17
+rings = 10
+material = SubResource("StandardMaterial3D_536dj")
+
+[node name="cube_g" type="CSGBox3D" parent="ui/canvas_item/sv/ball"]
+transform = Transform3D(0.485561, -0.671541, 0.559699, 0.810359, 0.585934, 1.11217e-08, -0.327947, 0.453557, 0.828696, 53.1308, 39.6766, -4.83031)
+size = Vector3(9.13391, 21.8927, 12.8154)
+material = SubResource("StandardMaterial3D_n0l7d")
+
+[node name="cube_b" type="CSGBox3D" parent="ui/canvas_item/sv/ball"]
+transform = Transform3D(0.999996, -0.00172642, -0.00223908, 0.000522896, 0.891196, -0.453618, 0.00277847, 0.453615, 0.891194, 40.8449, 13.024, 59.2844)
+size = Vector3(4, 16.1857, 8.49414)
+material = SubResource("StandardMaterial3D_l7uku")
+
+[node name="cube_r" type="CSGBox3D" parent="ui/canvas_item/sv/ball"]
+transform = Transform3D(1, 2.98023e-08, 0, 0, 0.943582, -0.33114, 0, 0.33114, 0.943582, -5.74034, 34.734, -49.6306)
+size = Vector3(7, 7, 7)
+material = SubResource("StandardMaterial3D_gii3b")
+
+[node name="torus_w" type="CSGTorus3D" parent="ui/canvas_item/sv/ball"]
+transform = Transform3D(-0.625989, 0.198842, 0.754056, -0.676394, 0.342791, -0.65191, -0.38811, -0.918126, -0.080088, 110.676, 78.2311, -75.5149)
+inner_radius = 26.3103
+outer_radius = 19.892
+
+[node name="sphere" type="CSGSphere3D" parent="ui/canvas_item/sv/ball"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.3281, 6.25088, 37.6925)
+radius = 1.80024
+
+[node name="plane" type="CSGMesh3D" parent="ui/canvas_item/sv"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("QuadMesh_ot784")
+material = SubResource("ShaderMaterial_x16jm")
+
+[node name="c1" type="CSGCylinder3D" parent="ui/canvas_item/sv"]
+transform = Transform3D(-0.827257, 0, -0.561823, 0, 1, 0, 0.561823, 0, -0.827257, 179.909, 9.33432, -22.6585)
+radius = 2.83992
+height = 144.104
+
+[node name="c2" type="CSGCylinder3D" parent="ui/canvas_item/sv"]
+transform = Transform3D(-0.827257, 0, -0.561823, 0, 1, 0, 0.561823, 0, -0.827257, 163.414, 9.334, -11.4555)
+radius = 2.83992
+height = 144.104
+
+[node name="c3" type="CSGCylinder3D" parent="ui/canvas_item/sv"]
+transform = Transform3D(-0.827257, 0, -0.561823, 0, 1, 0, 0.561823, 0, -0.827257, 146.868, 9.334, -0.219047)
+radius = 2.83992
+height = 144.104
+
+[node name="c4" type="CSGCylinder3D" parent="ui/canvas_item/sv"]
+transform = Transform3D(-0.827257, 0, -0.561823, 0, 1, 0, 0.561823, 0, -0.827257, 130.323, 9.334, 11.0174)
+radius = 2.83992
+height = 144.104
+
+[node name="code_window" type="Window" parent="ui"]
+title = "Godot Shaders Sketchbook"
+position = Vector2i(20, 40)
+size = Vector2i(900, 600)
+min_size = Vector2i(820, 350)
+keep_title_visible = true
+
+[node name="ctl" type="Control" parent="ui/code_window"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 1.20499
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="vbox" type="VBoxContainer" parent="ui/code_window/ctl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ui/code_window/ctl/vbox"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ui/code_window/ctl/vbox/VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
+[node name="hbox4" type="HBoxContainer" parent="ui/code_window/ctl/vbox/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="new" type="Button" parent="ui/code_window/ctl/vbox/VBoxContainer/hbox4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "New sketch"
+icon = ExtResource("6_smwmn")
+
+[node name="open" type="Button" parent="ui/code_window/ctl/vbox/VBoxContainer/hbox4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Open sketch"
+icon = ExtResource("7_oon7y")
+
+[node name="save" type="Button" parent="ui/code_window/ctl/vbox/VBoxContainer/hbox4"]
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Save sketch"
+icon = ExtResource("7_5qqym")
+
+[node name="save_as" type="Button" parent="ui/code_window/ctl/vbox/VBoxContainer/hbox4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Save as..."
+icon = ExtResource("9_4ag6f")
+
+[node name="target" type="Button" parent="ui/code_window/ctl/vbox/VBoxContainer/hbox4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Switch target"
+icon = ExtResource("8_s1yjo")
+
+[node name="panel" type="Button" parent="ui/code_window/ctl/vbox/VBoxContainer/hbox4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Hide panel"
+icon = ExtResource("9_j5d2a")
+
+[node name="about" type="Button" parent="ui/code_window/ctl/vbox/VBoxContainer/hbox4"]
+layout_mode = 2
+icon = ExtResource("11_pytqv")
+
+[node name="MarginContainer2" type="MarginContainer" parent="ui/code_window/ctl/vbox/VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="hbox2" type="HBoxContainer" parent="ui/code_window/ctl/vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="code" type="CodeEdit" parent="ui/code_window/ctl/vbox/hbox2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
+text = "shader_type canvas_item;
+
+void vertex() {
+
+}
+
+void fragment() {
+
+}"
+placeholder_text = "shader_type canvas_item;
+
+void vertex() {
+
+}
+
+void fragment() {
+
+}"
+context_menu_enabled = false
+deselect_on_focus_loss_enabled = false
+wrap_mode = 1
+scroll_smooth = true
+highlight_all_occurrences = true
+highlight_current_line = true
+draw_control_chars = true
+draw_tabs = true
+draw_spaces = true
+line_folding = true
+gutters_draw_executing_lines = true
+gutters_draw_line_numbers = true
+gutters_zero_pad_line_numbers = true
+gutters_draw_fold_gutter = true
+code_completion_enabled = true
+indent_automatic = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
+script = ExtResource("8_0svi2")
+
+[node name="vbox" type="VBoxContainer" parent="ui/code_window/ctl/vbox/hbox2"]
+layout_mode = 2
+
+[node name="vbox" type="VBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="hbox" type="HBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox"]
+layout_mode = 2
+
+[node name="c1" type="ColorRect" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0, 0, 0, 0.125)
+
+[node name="uniforms" type="Label" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "  Uniforms  "
+horizontal_alignment = 1
+
+[node name="c2" type="ColorRect" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0, 0, 0, 0.12549)
+
+[node name="scroll" type="ScrollContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="vbox" type="VBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox/scroll"]
+layout_mode = 2
+alignment = 1
+script = ExtResource("9_jcgio")
+
+[node name="vbox2" type="VBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
+
+[node name="hbox" type="HBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2"]
+layout_mode = 2
+
+[node name="c1" type="ColorRect" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0, 0, 0, 0.125)
+
+[node name="Scene" type="Label" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/hbox"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "  Options  "
+horizontal_alignment = 1
+
+[node name="c2" type="ColorRect" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0, 0, 0, 0.125)
+
+[node name="scroll" type="ScrollContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="vbox" type="VBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="h5" type="HBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox"]
+layout_mode = 2
+
+[node name="zoom" type="Label" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h5"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Text zoom"
+
+[node name="SpinBox" type="SpinBox" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h5"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 10.0
+max_value = 25.0
+value = 16.0
+
+[node name="h1" type="HBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox"]
+visible = false
+layout_mode = 2
+
+[node name="label" type="Label" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h1"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mesh type "
+
+[node name="option" type="OptionButton" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h1"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 1
+popup/item_0/text = "Cube"
+popup/item_0/id = 0
+
+[node name="h2" type="HBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox"]
+layout_mode = 2
+
+[node name="label" type="Label" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Rotate mesh"
+
+[node name="check" type="CheckButton" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h2"]
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+
+[node name="h3" type="HBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox"]
+layout_mode = 2
+
+[node name="label" type="Label" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Fog"
+
+[node name="check" type="CheckButton" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h3"]
+layout_mode = 2
+size_flags_horizontal = 3
+button_pressed = true
+
+[node name="h4" type="HBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox"]
+layout_mode = 2
+
+[node name="label" type="Label" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Color"
+
+[node name="option" type="OptionButton" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h4"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 4
+selected = 3
+popup/item_0/text = "Linear"
+popup/item_0/id = 0
+popup/item_1/text = "Reinhard"
+popup/item_1/id = 1
+popup/item_2/text = "Filmic"
+popup/item_2/id = 2
+popup/item_3/text = "ACES"
+popup/item_3/id = 3
+
+[node name="hbox3" type="HBoxContainer" parent="ui/code_window/ctl/vbox"]
+layout_mode = 2
+alignment = 1
+
+[node name="warning" type="TextureRect" parent="ui/code_window/ctl/vbox/hbox3"]
+layout_mode = 2
+expand_mode = 3
+
+[node name="debug" type="Label" parent="ui/code_window/ctl/vbox/hbox3"]
+layout_mode = 2
+horizontal_alignment = 1
+script = ExtResource("10_upjqj")
+
+[node name="mode" type="Label" parent="ui/code_window/ctl/vbox/hbox3"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 2
+
+[node name="save_window" type="FileDialog" parent="ui/code_window"]
+title = "Save a sketch"
+initial_position = 4
+size = Vector2i(464, 462)
+mode_overrides_title = false
+root_subfolder = "shaders"
+filters = PackedStringArray("*.gdshader")
+
+[node name="open_window" type="FileDialog" parent="ui/code_window"]
+title = "Open a sketch"
+initial_position = 4
+size = Vector2i(516, 465)
+ok_button_text = "Open"
+mode_overrides_title = false
+file_mode = 0
+root_subfolder = "shaders"
+filters = PackedStringArray("*.gdshader")
+
+[node name="open_confirm" type="ConfirmationDialog" parent="ui/code_window"]
+initial_position = 4
+dialog_text = "There are unsaved changes. Do you want to discard them?"
+
+[node name="new_confirm" type="ConfirmationDialog" parent="ui/code_window"]
+initial_position = 4
+dialog_text = "There are unsaved changes. Do you want to discard them?"
+
+[node name="about" type="AcceptDialog" parent="ui/code_window"]
+title = "About"
+initial_position = 4
+size = Vector2i(189, 214)
+ok_button_text = "  OK  "
+dialog_text = "Godot Shaders Sketchbook
+ver 1.0
+
+(C) Horologiq, 2024
+http://horologiq.com
+
+Licensed under MIT"
+
+[node name="env" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1egjd")
+
+[connection signal="pressed" from="ui/code_window/ctl/vbox/VBoxContainer/hbox4/new" to="." method="_on_new_pressed"]
+[connection signal="pressed" from="ui/code_window/ctl/vbox/VBoxContainer/hbox4/open" to="." method="_on_open_pressed"]
+[connection signal="pressed" from="ui/code_window/ctl/vbox/VBoxContainer/hbox4/save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="ui/code_window/ctl/vbox/VBoxContainer/hbox4/save_as" to="." method="_on_save_as_pressed"]
+[connection signal="pressed" from="ui/code_window/ctl/vbox/VBoxContainer/hbox4/target" to="." method="_on_target_pressed"]
+[connection signal="pressed" from="ui/code_window/ctl/vbox/VBoxContainer/hbox4/panel" to="." method="_on_panel_pressed"]
+[connection signal="pressed" from="ui/code_window/ctl/vbox/VBoxContainer/hbox4/about" to="." method="_on_about_pressed"]
+[connection signal="text_changed" from="ui/code_window/ctl/vbox/hbox2/code" to="." method="_on_code_text_changed"]
+[connection signal="value_changed" from="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h5/SpinBox" to="." method="_on_spin_box_value_changed"]
+[connection signal="toggled" from="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h2/check" to="." method="_on_check_toggled"]
+[connection signal="toggled" from="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h3/check" to="." method="_on_fog_toggled"]
+[connection signal="item_selected" from="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h4/option" to="." method="_on_color_item_selected"]
+[connection signal="file_selected" from="ui/code_window/save_window" to="." method="_on_save_window_file_selected"]
+[connection signal="file_selected" from="ui/code_window/open_window" to="." method="_on_open_window_file_selected"]
+[connection signal="confirmed" from="ui/code_window/open_confirm" to="." method="_on_open_confirm_confirmed"]
+[connection signal="confirmed" from="ui/code_window/new_confirm" to="." method="_on_new_confirm_confirmed"]

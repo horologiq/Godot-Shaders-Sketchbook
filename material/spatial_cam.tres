@@ -1,0 +1,16 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://0mc2oe3agaci"]
+
+[sub_resource type="Shader" id="Shader_fk40c"]
+code = "shader_type spatial;
+
+void vertex() {
+
+}
+
+void fragment() {
+
+}"
+
+[resource]
+render_priority = 0
+shader = SubResource("Shader_fk40c")

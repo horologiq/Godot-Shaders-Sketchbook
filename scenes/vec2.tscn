@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtffye655v75v"]
+
+[ext_resource type="Script" path="res://scripts/uniforms_ctl.gd" id="1_g1v2d"]
+
+[node name="cc" type="CenterContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_g1v2d")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 2
+alignment = 1
+
+[node name="label" type="Label" parent="vbox"]
+layout_mode = 2
+
+[node name="hbox" type="HBoxContainer" parent="vbox"]
+layout_mode = 2
+alignment = 1
+
+[node name="l1" type="LineEdit" parent="vbox/hbox"]
+layout_mode = 2
+max_length = 5
+expand_to_text_length = true
+context_menu_enabled = false
+
+[node name="l2" type="LineEdit" parent="vbox/hbox"]
+layout_mode = 2
+max_length = 5
+expand_to_text_length = true
+context_menu_enabled = false
+
+[node name="mouse" type="CheckButton" parent="vbox"]
+layout_mode = 2
+text = "Mouse Simulation"
+
+[connection signal="text_submitted" from="vbox/hbox/l1" to="." method="values_changed"]
+[connection signal="text_submitted" from="vbox/hbox/l2" to="." method="values_changed"]
+[connection signal="toggled" from="vbox/mouse" to="." method="_on_mouse_toggled"]
