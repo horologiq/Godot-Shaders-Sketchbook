@@ -6,7 +6,6 @@
 [ext_resource type="Material" uid="uid://0mc2oe3agaci" path="res://material/spatial_cam.tres" id="5_ua2ql"]
 [ext_resource type="Texture2D" uid="uid://bj844xmc7q872" path="res://theme/quill.png" id="6_smwmn"]
 [ext_resource type="Texture2D" uid="uid://ce0is5v7dseet" path="res://theme/save.png" id="7_5qqym"]
-[ext_resource type="Texture2D" uid="uid://lfktf3dvgeq5" path="res://theme/chest.png" id="7_oon7y"]
 [ext_resource type="Shader" path="res://material/def_grid.gdshader" id="7_oyry5"]
 [ext_resource type="Script" path="res://scripts/code.gd" id="8_0svi2"]
 [ext_resource type="Texture2D" uid="uid://b17ycsl2kvs4k" path="res://theme/bow.png" id="8_s1yjo"]
@@ -15,6 +14,7 @@
 [ext_resource type="Script" path="res://scripts/uniforms_ui.gd" id="9_jcgio"]
 [ext_resource type="Script" path="res://scripts/debug.gd" id="10_upjqj"]
 [ext_resource type="Texture2D" uid="uid://dh2c1w6l1lxdx" path="res://theme/question.png" id="11_pytqv"]
+[ext_resource type="Texture2D" uid="uid://d1gi63d3paqd0" path="res://theme/chest.png" id="14_aqkmy"]
 
 [sub_resource type="Shader" id="Shader_755mh"]
 code = "shader_type canvas_item;
@@ -193,7 +193,7 @@ height = 144.104
 
 [node name="code_window" type="Window" parent="ui"]
 title = "Godot Shaders Sketchbook"
-position = Vector2i(20, 40)
+position = Vector2i(0, 30)
 size = Vector2i(900, 600)
 min_size = Vector2i(820, 350)
 keep_title_visible = true
@@ -236,7 +236,7 @@ icon = ExtResource("6_smwmn")
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Open sketch"
-icon = ExtResource("7_oon7y")
+icon = ExtResource("14_aqkmy")
 
 [node name="save" type="Button" parent="ui/code_window/ctl/vbox/VBoxContainer/hbox4"]
 layout_mode = 2

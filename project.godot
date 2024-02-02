@@ -13,6 +13,7 @@ config_version=5
 config/name="Godot Shaders Sketchbook"
 run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.3")
+boot_splash/show_image=false
 config/icon="res://icon.png"
 
 [debug]
@@ -25,6 +26,5 @@ file_logging/max_log_files=0
 
 hide_window={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":true,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":72,"key_label":0,"unicode":0,"echo":false,"script":null)
-]
+"events": []
 }
