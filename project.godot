@@ -22,6 +22,10 @@ file_logging/enable_file_logging=true
 file_logging/log_path="user://logs/output.log"
 file_logging/max_log_files=0
 
+[display]
+
+window/size/mode=2
+
 [input]
 
 hide_window={

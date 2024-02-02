@@ -143,7 +143,7 @@ rings = 10
 material = SubResource("StandardMaterial3D_536dj")
 
 [node name="cube_g" type="CSGBox3D" parent="ui/canvas_item/sv/ball"]
-transform = Transform3D(0.485561, -0.671541, 0.559699, 0.810359, 0.585934, 1.11217e-08, -0.327947, 0.453557, 0.828696, 53.1308, 39.6766, -4.83031)
+transform = Transform3D(0.485561, -0.671541, 0.559699, 0.810359, 0.585934, 1.11217e-08, -0.327947, 0.453557, 0.828696, 7.15685, 29.106, -11.7386)
 size = Vector3(9.13391, 21.8927, 12.8154)
 material = SubResource("StandardMaterial3D_n0l7d")
 
@@ -153,7 +153,7 @@ size = Vector3(4, 16.1857, 8.49414)
 material = SubResource("StandardMaterial3D_l7uku")
 
 [node name="cube_r" type="CSGBox3D" parent="ui/canvas_item/sv/ball"]
-transform = Transform3D(1, 2.98023e-08, 0, 0, 0.943582, -0.33114, 0, 0.33114, 0.943582, -5.74034, 34.734, -49.6306)
+transform = Transform3D(1, 2.98023e-08, 0, 0, 0.943582, -0.33114, 0, 0.33114, 0.943582, -29.869, 0.886221, -2.37378)
 size = Vector3(7, 7, 7)
 material = SubResource("StandardMaterial3D_gii3b")
 
@@ -490,6 +490,7 @@ title = "Save a sketch"
 initial_position = 4
 size = Vector2i(464, 462)
 mode_overrides_title = false
+access = 1
 root_subfolder = "shaders"
 filters = PackedStringArray("*.gdshader")
 
@@ -500,6 +501,7 @@ size = Vector2i(516, 465)
 ok_button_text = "Open"
 mode_overrides_title = false
 file_mode = 0
+access = 1
 root_subfolder = "shaders"
 filters = PackedStringArray("*.gdshader")
 

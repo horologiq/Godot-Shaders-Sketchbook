@@ -39,6 +39,7 @@ var rotz = randf_range(-0.3, 0.3)
 
 
 func _ready():
+	check_user_dir()		
 	warning.texture = img_ok
 	debug_label.connect("ok", _on_ok_raised)
 	debug_label.connect("error_found", _on_error_raised)
@@ -159,6 +160,25 @@ func set_shader_type():
 		target_button.set_disabled(false)
 
 
+func check_user_dir():
+	if not DirAccess.dir_exists_absolute("user://shaders"):
+		DirAccess.make_dir_absolute("user://shaders")
+		save_window.set_root_subfolder("shaders")
+		open_window.set_root_subfolder("shaders")
+
+	if not FileAccess.file_exists("user://shaders/2d-random-dots.gdshader"):
+		DirAccess.copy_absolute("res://shaders/examples/2d-random-dots.gdshader","user://shaders/2d-random-dots.gdshader")
+		
+	if not FileAccess.file_exists("user://shaders/dashed_grid.gdshader"):
+		DirAccess.copy_absolute("res://shaders/examples/dashed_grid.gdshader","user://shaders/dashed_grid.gdshader")
+		
+	if not FileAccess.file_exists("user://shaders/glass.gdshader"):
+		DirAccess.copy_absolute("res://shaders/examples/glass.gdshader","user://shaders/glass.gdshader")
+		
+	if not FileAccess.file_exists("user://shaders/wrip_effect.gdshader"):
+		DirAccess.copy_absolute("res://shaders/examples/wrip_effect.gdshader","user://shaders/wrip_effect.gdshader")
+
+
 func _on_target_pressed():
 	retarget()
 	run()
@@ -243,7 +263,7 @@ func _on_panel_pressed():
 func _on_open_window_file_selected(path):
 	open(path)
 
-	$ui/code_window.set_title("Godot Shaders Sketchbook " + "[ " + path.replace("res://shaders/", "").replace(".gdshader","") + " ]")
+	$ui/code_window.set_title("Godot Shaders Sketchbook " + "[ " + path.replace("user://shaders/", "").replace(".gdshader","") + " ]")
 	$ui/code_window/ctl/vbox/VBoxContainer/hbox4/save.set_disabled(false)
 	run()
 
