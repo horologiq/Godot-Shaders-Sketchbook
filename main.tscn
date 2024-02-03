@@ -193,7 +193,7 @@ height = 144.104
 
 [node name="code_window" type="Window" parent="ui"]
 title = "Godot Shaders Sketchbook"
-position = Vector2i(0, 30)
+position = Vector2i(30, 60)
 size = Vector2i(900, 600)
 min_size = Vector2i(820, 350)
 keep_title_visible = true

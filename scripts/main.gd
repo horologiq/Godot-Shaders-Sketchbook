@@ -161,22 +161,19 @@ func set_shader_type():
 
 
 func check_user_dir():
-	if not DirAccess.dir_exists_absolute("user://shaders"):
-		DirAccess.make_dir_absolute("user://shaders")
-		save_window.set_root_subfolder("shaders")
-		open_window.set_root_subfolder("shaders")
+	copy_dir("res://shaders/examples/", "user://shaders/")
 
-	if not FileAccess.file_exists("user://shaders/2d-random-dots.gdshader"):
-		DirAccess.copy_absolute("res://shaders/examples/2d-random-dots.gdshader","user://shaders/2d-random-dots.gdshader")
-		
-	if not FileAccess.file_exists("user://shaders/dashed_grid.gdshader"):
-		DirAccess.copy_absolute("res://shaders/examples/dashed_grid.gdshader","user://shaders/dashed_grid.gdshader")
-		
-	if not FileAccess.file_exists("user://shaders/glass.gdshader"):
-		DirAccess.copy_absolute("res://shaders/examples/glass.gdshader","user://shaders/glass.gdshader")
-		
-	if not FileAccess.file_exists("user://shaders/wrip_effect.gdshader"):
-		DirAccess.copy_absolute("res://shaders/examples/wrip_effect.gdshader","user://shaders/wrip_effect.gdshader")
+
+func copy_dir(source: String, destination: String):
+	DirAccess.make_dir_recursive_absolute(destination)
+	save_window.set_root_subfolder("user://shaders")
+	open_window.set_root_subfolder("user://shaders")
+
+	var source_dir = DirAccess.open(source);
+	
+	for filename in source_dir.get_files():
+		if FileAccess.file_exists(destination + filename) == false:
+			source_dir.copy(source + filename, destination + filename)
 
 
 func _on_target_pressed():
@@ -291,9 +288,6 @@ func _on_save_as_pressed():
 		save_window.visible = true
 		if current_file_path != null:
 			save_window.set_current_path(current_file_path)
-			
-			
-
 
 
 func _on_save_window_file_selected(path):
@@ -363,4 +357,4 @@ func _on_ok_raised():
 func _on_save_pressed():
 	modified_flag = false
 	if current_file_path != null:
-		print(current_file_path)
+		save(current_file_path)
