@@ -43,7 +43,7 @@ Vec2 widget with mouse simulation
 <center><img src="mouse.gif"/></center>
 
 
-Float widget and target how swapping
+Float widget and target hot swapping
 <center><img src="target.gif"/></center>
 
 
