@@ -25,14 +25,16 @@ var roty = randf_range(-0.3, 0.3)
 var rotz = randf_range(-0.3, 0.3)
 
 @onready var canvas = $ui/canvas_item
+@onready var target_icon = $ui/icon
 @onready var target_spatial_cube = $ui/canvas_item/sv/cube
 @onready var target_spatial_mesh = $ui/canvas_item/sv/cam/cam_mesh
 @onready var code = $ui/code_window/ctl/vbox/hbox2/code
-@onready var debug_label = $ui/code_window/ctl/vbox/hbox3/debug
+@onready var debug_label = $ui/code_window/ctl/vbox/hbox3/hbox/debug
 @onready var side_panel = $ui/code_window/ctl/vbox/hbox2/vbox
 @onready var uniforms_panel = $ui/code_window/ctl/vbox/hbox2/vbox/vbox/scroll/vbox
-@onready var warning = $ui/code_window/ctl/vbox/hbox3/warning
+@onready var warning = $ui/code_window/ctl/vbox/hbox3/hbox/warning
 @onready var target_button = $ui/code_window/ctl/vbox/VBoxContainer/hbox4/target
+@onready var flip_faces_button = $ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/HBoxContainer/check
 @onready var panel_button = $ui/code_window/ctl/vbox/VBoxContainer/hbox4/panel
 @onready var open_window = $ui/code_window/open_window
 @onready var save_window = $ui/code_window/save_window
@@ -67,14 +69,27 @@ func run():
 	set_shader_type()
 
 	if code.text != "" and sel == 0:
-		canvas.material.shader.set_code(code.text)
+		target_spatial_mesh.visible = false
+		if target_mode == 0:
+			target_icon.visible = true
+			target_icon.material.shader.set_code(code.text)
+			$ui/code_window/ctl/vbox/hbox3/target.text = "Target: Sprite"
+		elif target_mode == 1:
+			target_icon.visible = false
+			canvas.material.shader.set_code(code.text)
+			$ui/code_window/ctl/vbox/hbox3/target.text = "Target: Viewport"
 	elif code.text != "" and sel == 1:
 		if target_mode == 0:
+			target_icon.visible = true
 			target_spatial_mesh.visible = false
 			target_spatial_cube.material.shader.set_code(code.text)
+			$ui/code_window/ctl/vbox/hbox3/target.text = "Target: Cube"
 		elif target_mode == 1:
+			target_icon.visible = false
 			target_spatial_mesh.visible = true
 			target_spatial_mesh.mesh.material.shader.set_code(code.text)
+			$ui/code_window/ctl/vbox/hbox3/target.text = "Target: Camera mesh"
+			
 
 	update_uniforms_interpreter()
 
@@ -88,6 +103,7 @@ func change_rot():
 
 
 func clear_shaders_from_objects():
+	target_icon.material.shader.set_code(default_canvas.get_code())
 	canvas.material.shader.set_code(default_canvas.get_code())
 	target_spatial_mesh.mesh.material.shader.set_code(default_spatial.get_code())
 	target_spatial_cube.material.shader.set_code(default_spatial.get_code())
@@ -118,8 +134,12 @@ func retarget():
 	clear_shaders_from_objects()
 	if target_mode == 0:
 		target_mode = 1
+		target_spatial_cube.set_flip_faces(false)
+		flip_faces_button.set_pressed(true)
+		
 	elif target_mode == 1:
 		target_mode = 0
+		flip_faces_button.set_pressed(false)
 
 
 func update_uniforms_interpreter():
@@ -129,7 +149,6 @@ func update_uniforms_interpreter():
 		uniforms = interpreter.go(code.text)
 
 	uniforms_ui.register_lines(uniforms)
-
 	update_uniforms_ui()
 
 
@@ -153,11 +172,11 @@ func set_shader_type():
 	if regex_canvas_item.search(code.text):
 		sel = 0
 		$ui/code_window/ctl/vbox/hbox3/mode.text = "Canvas item mode"
-		target_button.set_disabled(true)
+		flip_faces_button.set_disabled(true)
 	elif regex_spatial.search(code.text):
 		sel = 1
+		flip_faces_button.set_disabled(false)
 		$ui/code_window/ctl/vbox/hbox3/mode.text = "Spatial mode"
-		target_button.set_disabled(false)
 
 
 func check_user_dir():
@@ -304,10 +323,14 @@ func _on_new_pressed():
 
 func _on_new_confirm_confirmed():
 	$ui/code_window/ctl/vbox/VBoxContainer/hbox4/save.set_disabled(true)
+	clear_shaders_from_objects()
+
 	if sel == 0:
 		open(def_canvas)
 	elif sel == 1:
 		open(def_spatial)
+		
+	run()
 
 
 func _on_check_toggled(toggled_on):
@@ -358,3 +381,14 @@ func _on_save_pressed():
 	modified_flag = false
 	if current_file_path != null:
 		save(current_file_path)
+
+
+func _on_flip_z_toggled(toggled_on):
+	if sel == 0:
+		pass
+	if sel == 1:
+		if target_mode == 0:
+			target_spatial_cube.set_flip_faces(toggled_on)
+		if target_mode == 1:
+			target_spatial_mesh.mesh.set_flip_faces(not toggled_on)
+			

@@ -15,6 +15,7 @@ run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.3")
 boot_splash/show_image=false
 config/icon="res://icon.png"
+config/windows_native_icon="res://icon.ico"
 
 [debug]
 

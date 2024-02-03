@@ -1,9 +1,10 @@
-[gd_scene load_steps=28 format=3 uid="uid://d264fpnvv0eoe"]
+[gd_scene load_steps=37 format=3 uid="uid://d264fpnvv0eoe"]
 
 [ext_resource type="Theme" uid="uid://d1qpw35l7ja7y" path="res://theme/gss.tres" id="1_1dx6c"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_5g2jr"]
 [ext_resource type="Material" uid="uid://dwqtjhujebt4k" path="res://material/spatial_cube.tres" id="3_dhedx"]
 [ext_resource type="Material" uid="uid://0mc2oe3agaci" path="res://material/spatial_cam.tres" id="5_ua2ql"]
+[ext_resource type="Texture2D" uid="uid://diupmnjkp4ljl" path="res://icon.png" id="6_2k131"]
 [ext_resource type="Texture2D" uid="uid://bj844xmc7q872" path="res://theme/quill.png" id="6_smwmn"]
 [ext_resource type="Texture2D" uid="uid://ce0is5v7dseet" path="res://theme/save.png" id="7_5qqym"]
 [ext_resource type="Shader" path="res://material/def_grid.gdshader" id="7_oyry5"]
@@ -34,21 +35,151 @@ shader = SubResource("Shader_755mh")
 lightmap_size_hint = Vector2i(12, 12)
 material = ExtResource("5_ua2ql")
 flip_faces = true
-size = Vector2(2, 2)
+size = Vector2(5, 5)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_536dj"]
-albedo_color = Color(0.732051, 0.549465, 0, 1)
-metallic = 1.0
-roughness = 0.23
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6e3rx"]
+render_priority = 0
+shader = ExtResource("7_oyry5")
+shader_parameter/subdivisions = 32.0
+shader_parameter/grid_width = 0.02
+shader_parameter/background_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/background_color_two = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/grid_color = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 1.0
+shader_parameter/point_width = 0.021
+shader_parameter/point_color = Color(0, 0, 0, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n0l7d"]
-albedo_color = Color(0, 1, 0, 1)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_svfeu"]
+render_priority = 0
+shader = ExtResource("7_oyry5")
+shader_parameter/subdivisions = 32.0
+shader_parameter/grid_width = 0.02
+shader_parameter/background_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/background_color_two = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/grid_color = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 1.0
+shader_parameter/point_width = 0.021
+shader_parameter/point_color = Color(0, 0, 0, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l7uku"]
-albedo_color = Color(0, 0, 1, 1)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nhys2"]
+render_priority = 0
+shader = ExtResource("7_oyry5")
+shader_parameter/subdivisions = 32.0
+shader_parameter/grid_width = 0.02
+shader_parameter/background_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/background_color_two = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/grid_color = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 1.0
+shader_parameter/point_width = 0.021
+shader_parameter/point_color = Color(0, 0, 0, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gii3b"]
-albedo_color = Color(1, 0, 0, 1)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kqf5n"]
+render_priority = 0
+shader = ExtResource("7_oyry5")
+shader_parameter/subdivisions = 32.0
+shader_parameter/grid_width = 0.02
+shader_parameter/background_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/background_color_two = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/grid_color = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 1.0
+shader_parameter/point_width = 0.021
+shader_parameter/point_color = Color(0, 0, 0, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vwdvu"]
+render_priority = 0
+shader = ExtResource("7_oyry5")
+shader_parameter/subdivisions = 32.0
+shader_parameter/grid_width = 0.02
+shader_parameter/background_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/background_color_two = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/grid_color = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 1.0
+shader_parameter/point_width = 0.021
+shader_parameter/point_color = Color(0, 0, 0, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ahk4n"]
+render_priority = 0
+shader = ExtResource("7_oyry5")
+shader_parameter/subdivisions = 32.0
+shader_parameter/grid_width = 0.02
+shader_parameter/background_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/background_color_two = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/grid_color = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 1.0
+shader_parameter/point_width = 0.021
+shader_parameter/point_color = Color(0, 0, 0, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_ot784"]
 size = Vector2(250, 250)
@@ -76,6 +207,116 @@ shader_parameter/in_dashed_scale_x = 0.3
 shader_parameter/in_dashed_scale_y = 0.3
 shader_parameter/in_dashed_count_x = 6.0
 shader_parameter/in_dashed_count_y = 6.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2t0jy"]
+render_priority = 0
+shader = ExtResource("7_oyry5")
+shader_parameter/subdivisions = 32.0
+shader_parameter/grid_width = 0.02
+shader_parameter/background_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/background_color_two = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/grid_color = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 1.0
+shader_parameter/point_width = 0.021
+shader_parameter/point_color = Color(0, 0, 0, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oov70"]
+render_priority = 0
+shader = ExtResource("7_oyry5")
+shader_parameter/subdivisions = 32.0
+shader_parameter/grid_width = 0.02
+shader_parameter/background_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/background_color_two = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/grid_color = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 1.0
+shader_parameter/point_width = 0.021
+shader_parameter/point_color = Color(0, 0, 0, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e5n2p"]
+render_priority = 0
+shader = ExtResource("7_oyry5")
+shader_parameter/subdivisions = 32.0
+shader_parameter/grid_width = 0.02
+shader_parameter/background_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/background_color_two = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/grid_color = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 1.0
+shader_parameter/point_width = 0.021
+shader_parameter/point_color = Color(0, 0, 0, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dcvwd"]
+render_priority = 0
+shader = ExtResource("7_oyry5")
+shader_parameter/subdivisions = 32.0
+shader_parameter/grid_width = 0.02
+shader_parameter/background_color = Color(0.2, 0.2, 0.2, 1)
+shader_parameter/background_color_two = Color(0.1, 0.1, 0.1, 1)
+shader_parameter/grid_color = Color(0.5, 0.5, 0.5, 1)
+shader_parameter/dashed_scale_x = 0.02
+shader_parameter/dashed_scale_y = 0.02
+shader_parameter/dashed_count_x = 1.0
+shader_parameter/dashed_count_y = 1.0
+shader_parameter/point_width = 0.021
+shader_parameter/point_color = Color(0, 0, 0, 1)
+shader_parameter/point_scale_x = 0.05
+shader_parameter/point_scale_y = 0.05
+shader_parameter/inside_width = 0.01
+shader_parameter/inside_subdivisions = 6.0
+shader_parameter/inside_color = Color(0.4, 0.4, 0.4, 1)
+shader_parameter/in_dashed_scale_x = 0.3
+shader_parameter/in_dashed_scale_y = 0.3
+shader_parameter/in_dashed_count_x = 6.0
+shader_parameter/in_dashed_count_y = 6.0
+
+[sub_resource type="Shader" id="Shader_n3q2g"]
+code = "shader_type canvas_item;
+
+void vertex() {
+
+}
+
+void fragment() {
+
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lbwwa"]
+shader = SubResource("Shader_n3q2g")
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3w1pd"]
 
@@ -129,7 +370,7 @@ mesh = SubResource("QuadMesh_ptngd")
 skeleton = NodePath("")
 
 [node name="cube" type="CSGBox3D" parent="ui/canvas_item/sv"]
-transform = Transform3D(0.515286, 0.175946, 0.838762, -0.856376, 0.143581, 0.495989, -0.0331619, -0.973873, 0.224662, -2.66136, 2.2908, -3.22689)
+transform = Transform3D(0.515286, 0.175946, 0.838762, -0.856376, 0.143581, 0.495989, -0.0331619, -0.973873, 0.224662, -2.31476, 2.39389, -3.27564)
 material = ExtResource("3_dhedx")
 
 [node name="light" type="DirectionalLight3D" parent="ui/canvas_item/sv"]
@@ -138,33 +379,34 @@ transform = Transform3D(-0.792048, -0.0592061, -0.607581, -0.578703, -0.244005, 
 [node name="ball" type="CSGSphere3D" parent="ui/canvas_item/sv"]
 transform = Transform3D(0.693955, 0, -0.720018, 0, 1, 0, 0.720018, 0, 0.693955, 40.9083, 26.9181, -41.9142)
 radius = 22.1549
-radial_segments = 17
-rings = 10
-material = SubResource("StandardMaterial3D_536dj")
+radial_segments = 32
+material = SubResource("ShaderMaterial_6e3rx")
 
 [node name="cube_g" type="CSGBox3D" parent="ui/canvas_item/sv/ball"]
 transform = Transform3D(0.485561, -0.671541, 0.559699, 0.810359, 0.585934, 1.11217e-08, -0.327947, 0.453557, 0.828696, 7.15685, 29.106, -11.7386)
 size = Vector3(9.13391, 21.8927, 12.8154)
-material = SubResource("StandardMaterial3D_n0l7d")
+material = SubResource("ShaderMaterial_svfeu")
 
 [node name="cube_b" type="CSGBox3D" parent="ui/canvas_item/sv/ball"]
 transform = Transform3D(0.999996, -0.00172642, -0.00223908, 0.000522896, 0.891196, -0.453618, 0.00277847, 0.453615, 0.891194, 40.8449, 13.024, 59.2844)
 size = Vector3(4, 16.1857, 8.49414)
-material = SubResource("StandardMaterial3D_l7uku")
+material = SubResource("ShaderMaterial_nhys2")
 
 [node name="cube_r" type="CSGBox3D" parent="ui/canvas_item/sv/ball"]
 transform = Transform3D(1, 2.98023e-08, 0, 0, 0.943582, -0.33114, 0, 0.33114, 0.943582, -29.869, 0.886221, -2.37378)
 size = Vector3(7, 7, 7)
-material = SubResource("StandardMaterial3D_gii3b")
+material = SubResource("ShaderMaterial_kqf5n")
 
 [node name="torus_w" type="CSGTorus3D" parent="ui/canvas_item/sv/ball"]
 transform = Transform3D(-0.625989, 0.198842, 0.754056, -0.676394, 0.342791, -0.65191, -0.38811, -0.918126, -0.080088, 110.676, 78.2311, -75.5149)
 inner_radius = 26.3103
 outer_radius = 19.892
+material = SubResource("ShaderMaterial_vwdvu")
 
 [node name="sphere" type="CSGSphere3D" parent="ui/canvas_item/sv/ball"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.3281, 6.25088, 37.6925)
 radius = 1.80024
+material = SubResource("ShaderMaterial_ahk4n")
 
 [node name="plane" type="CSGMesh3D" parent="ui/canvas_item/sv"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
@@ -175,26 +417,48 @@ material = SubResource("ShaderMaterial_x16jm")
 transform = Transform3D(-0.827257, 0, -0.561823, 0, 1, 0, 0.561823, 0, -0.827257, 179.909, 9.33432, -22.6585)
 radius = 2.83992
 height = 144.104
+material = SubResource("ShaderMaterial_2t0jy")
 
 [node name="c2" type="CSGCylinder3D" parent="ui/canvas_item/sv"]
 transform = Transform3D(-0.827257, 0, -0.561823, 0, 1, 0, 0.561823, 0, -0.827257, 163.414, 9.334, -11.4555)
 radius = 2.83992
 height = 144.104
+material = SubResource("ShaderMaterial_oov70")
 
 [node name="c3" type="CSGCylinder3D" parent="ui/canvas_item/sv"]
 transform = Transform3D(-0.827257, 0, -0.561823, 0, 1, 0, 0.561823, 0, -0.827257, 146.868, 9.334, -0.219047)
 radius = 2.83992
 height = 144.104
+material = SubResource("ShaderMaterial_e5n2p")
 
 [node name="c4" type="CSGCylinder3D" parent="ui/canvas_item/sv"]
 transform = Transform3D(-0.827257, 0, -0.561823, 0, 1, 0, 0.561823, 0, -0.827257, 130.323, 9.334, 11.0174)
 radius = 2.83992
 height = 144.104
+material = SubResource("ShaderMaterial_dcvwd")
+
+[node name="icon" type="TextureRect" parent="ui"]
+material = SubResource("ShaderMaterial_lbwwa")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.996528
+anchor_top = 0.00925926
+anchor_right = 0.996528
+anchor_bottom = 0.00925926
+offset_left = -190.0
+offset_top = 13.0
+offset_right = 322.0
+offset_bottom = 525.0
+grow_horizontal = 0
+scale = Vector2(0.339844, 0.339844)
+texture = ExtResource("6_2k131")
+stretch_mode = 4
+metadata/_edit_use_anchors_ = true
 
 [node name="code_window" type="Window" parent="ui"]
 title = "Godot Shaders Sketchbook"
-position = Vector2i(30, 60)
-size = Vector2i(900, 600)
+position = Vector2i(30, 50)
+size = Vector2i(820, 820)
 min_size = Vector2i(820, 350)
 keep_title_visible = true
 
@@ -356,7 +620,7 @@ alignment = 1
 script = ExtResource("9_jcgio")
 
 [node name="vbox2" type="VBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox"]
-custom_minimum_size = Vector2(0, 150)
+custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
@@ -432,6 +696,18 @@ layout_mode = 2
 size_flags_horizontal = 3
 button_pressed = true
 
+[node name="HBoxContainer" type="HBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox"]
+layout_mode = 2
+
+[node name="label" type="Label" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Flip faces"
+
+[node name="check" type="CheckButton" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="h3" type="HBoxContainer" parent="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox"]
 layout_mode = 2
 
@@ -471,19 +747,27 @@ popup/item_3/id = 3
 layout_mode = 2
 alignment = 1
 
-[node name="warning" type="TextureRect" parent="ui/code_window/ctl/vbox/hbox3"]
+[node name="hbox" type="HBoxContainer" parent="ui/code_window/ctl/vbox/hbox3"]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="warning" type="TextureRect" parent="ui/code_window/ctl/vbox/hbox3/hbox"]
 layout_mode = 2
 expand_mode = 3
 
-[node name="debug" type="Label" parent="ui/code_window/ctl/vbox/hbox3"]
+[node name="debug" type="Label" parent="ui/code_window/ctl/vbox/hbox3/hbox"]
 layout_mode = 2
 horizontal_alignment = 1
 script = ExtResource("10_upjqj")
 
 [node name="mode" type="Label" parent="ui/code_window/ctl/vbox/hbox3"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 6
 horizontal_alignment = 2
+
+[node name="target" type="Label" parent="ui/code_window/ctl/vbox/hbox3"]
+layout_mode = 2
+size_flags_horizontal = 10
 
 [node name="save_window" type="FileDialog" parent="ui/code_window"]
 title = "Save a sketch"
@@ -539,6 +823,7 @@ environment = SubResource("Environment_1egjd")
 [connection signal="text_changed" from="ui/code_window/ctl/vbox/hbox2/code" to="." method="_on_code_text_changed"]
 [connection signal="value_changed" from="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h5/SpinBox" to="." method="_on_spin_box_value_changed"]
 [connection signal="toggled" from="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h2/check" to="." method="_on_check_toggled"]
+[connection signal="toggled" from="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/HBoxContainer/check" to="." method="_on_flip_z_toggled"]
 [connection signal="toggled" from="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h3/check" to="." method="_on_fog_toggled"]
 [connection signal="item_selected" from="ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/h4/option" to="." method="_on_color_item_selected"]
 [connection signal="file_selected" from="ui/code_window/save_window" to="." method="_on_save_window_file_selected"]

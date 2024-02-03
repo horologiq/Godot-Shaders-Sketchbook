@@ -21,7 +21,7 @@ horizontal_alignment = 1
 [node name="option" type="OptionButton" parent="vbox"]
 layout_mode = 2
 item_count = 7
-fit_to_longest_item = false
+allow_reselect = true
 popup/item_0/text = "None"
 popup/item_0/id = 0
 popup/item_1/text = "Simple texture"
