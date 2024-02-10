@@ -1,1 +1,0 @@
-CompressedTexture2D
