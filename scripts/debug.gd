@@ -1,11 +1,9 @@
 extends Label
 
 signal error_found(line_number)
-signal ok(line_number)
+signal ok
 
-@export var line_number = 0
-@export var error_type = 0
-
+var line_number = 0
 var error_count = 0
 
 
@@ -15,8 +13,7 @@ func _ready():
 
 func update_debug():
 	var file = FileAccess.open("user://logs/output.log", FileAccess.READ)
-	var content = file.get_as_text()
-	text = check_error(content)
+	text = check_error(file.get_as_text())
 
 	if line_number != null:
 		error_found.emit(line_number)
@@ -24,22 +21,18 @@ func update_debug():
 		ok.emit()
 
 
-func check_error(c):
-	var list = c.split("\n")
-
+func check_error(content):
 	var expr
 	var counter = 0
 
-	for i in list:
-		if i.left(1) == "E":
+	for line in content.split("\n"):
+		if line.begins_with("E"):
 			counter += 1
+			line_number = int(extract_line(line))
+			expr = "Line " + str(line_number)
 
-			line_number = int(extract_line(i))
-			expr = ("Line " + str(line_number))
-
-		if i.left(18) == "USER SHADER ERROR:":
-			error_type = clean_error(i, "USER SHADER ERROR:")
-			expr += (": " + error_type)
+		if line.begins_with("USER SHADER ERROR:"):
+			expr += ":" + line.trim_prefix("USER SHADER ERROR:")
 
 	if counter > error_count:
 		error_count += 1
@@ -52,26 +45,4 @@ func check_error(c):
 func extract_line(stn):
 	var regex = RegEx.new()
 	regex.compile("(\\d+)")
-	var result = regex.search(stn)
-
-	return result.get_string()
-
-
-func clean_error(string: String, removal: String):
-	var length = removal.length()
-	var i = 0
-
-	while i < string.length() - length:
-		var piece = ""
-		var j = i
-
-		while j < i + length:
-			piece += string[j]
-			j += 1
-
-		if piece == removal:
-			return string.substr(0, j - length) + string.substr(j)
-
-		i += 1
-
-	return string
+	return regex.search(stn).get_string()

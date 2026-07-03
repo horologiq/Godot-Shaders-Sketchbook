@@ -1,47 +1,54 @@
 extends Node
 
-var dir_canvas = "res://shaders/canvas_item/"
-var dir_spatial = "res://shaders/spatial/"
-var def_canvas = "res://material/def_canvas_item.gdshader"
-var def_spatial = "res://material/def_canvas_item.gdshader"
-var img_ok = load("res://theme/ok.png")
-var img_fail = load("res://theme/alert.png")
-var default_canvas = load(def_canvas)
-var default_spatial = load(def_spatial)
+const DEF_CANVAS = "res://material/def_canvas_item.gdshader"
+const DEF_SPATIAL = "res://material/def_spatial.gdshader"
+
+const SAMPLER_PATHS = {
+	1: "res://textures/simple.tres",
+	2: "res://textures/animated.tres",
+	3: "res://textures/gradient.tres",
+	4: "res://textures/noise.tres",
+	5: "res://textures/normal.tres",
+}
+
+var img_ok = preload("res://theme/ok.png")
+var img_fail = preload("res://theme/alert.png")
+var default_canvas = load(DEF_CANVAS)
+var default_spatial = load(DEF_SPATIAL)
 
 var interpreter = UniformsInterpreter.new()
 var uniforms_ui = UniformsUI.new()
 
 var current_file_path = null
-var sel = 0
+var uniforms = []
+var sel = 0  # 0 = canvas_item, 1 = spatial
 var target_mode = 0
-var array_dir = []
-var uniforms
-var code_ok = true
-var modified_flag = false
-var rotation = true
-var rotx = randf_range(-0.3, 0.3)
-var roty = randf_range(-0.3, 0.3)
-var rotz = randf_range(-0.3, 0.3)
+var modified = false
+var auto_rotate = true
+var rot = Vector3(randf_range(-0.3, 0.3), randf_range(-0.3, 0.3), randf_range(-0.3, 0.3))
 
 @onready var canvas = $ui/canvas_item
+@onready var ball = $ui/canvas_item/sv/ball
 @onready var target_icon = $ui/icon
 @onready var target_spatial_cube = $ui/canvas_item/sv/cube
 @onready var target_spatial_mesh = $ui/canvas_item/sv/cam/cam_mesh
+@onready var code_window = $ui/code_window
 @onready var code = $ui/code_window/ctl/vbox/hbox2/code
 @onready var debug_label = $ui/code_window/ctl/vbox/hbox3/hbox/debug
+@onready var warning = $ui/code_window/ctl/vbox/hbox3/hbox/warning
+@onready var target_label = $ui/code_window/ctl/vbox/hbox3/target
+@onready var mode_label = $ui/code_window/ctl/vbox/hbox3/mode
 @onready var side_panel = $ui/code_window/ctl/vbox/hbox2/vbox
 @onready var uniforms_panel = $ui/code_window/ctl/vbox/hbox2/vbox/vbox/scroll/vbox
-@onready var warning = $ui/code_window/ctl/vbox/hbox3/hbox/warning
-@onready var target_button = $ui/code_window/ctl/vbox/VBoxContainer/hbox4/target
 @onready var flip_faces_button = $ui/code_window/ctl/vbox/hbox2/vbox/vbox2/scroll/vbox/HBoxContainer/check
 @onready var panel_button = $ui/code_window/ctl/vbox/VBoxContainer/hbox4/panel
+@onready var save_button = $ui/code_window/ctl/vbox/VBoxContainer/hbox4/save
 @onready var open_window = $ui/code_window/open_window
 @onready var save_window = $ui/code_window/save_window
 
 
 func _ready():
-	check_user_dir()		
+	check_user_dir()
 	warning.texture = img_ok
 	debug_label.connect("ok", _on_ok_raised)
 	debug_label.connect("error_found", _on_error_raised)
@@ -54,52 +61,50 @@ func _ready():
 
 
 func _process(delta):
-	$ui/canvas_item/sv/ball.rotate_x(rotx * delta)
-	$ui/canvas_item/sv/ball.rotate_y(roty * delta)
-	$ui/canvas_item/sv/ball.rotate_z(rotz * delta)
+	ball.rotate_x(rot.x * delta)
+	ball.rotate_y(rot.y * delta)
+	ball.rotate_z(rot.z * delta)
 
-	if rotation == true:
+	if auto_rotate:
 		change_rot()
-		target_spatial_cube.rotate_x(rotx * delta)
-		target_spatial_cube.rotate_y(roty * delta)
-		target_spatial_cube.rotate_z(rotz * delta)
+		target_spatial_cube.rotate_x(rot.x * delta)
+		target_spatial_cube.rotate_y(rot.y * delta)
+		target_spatial_cube.rotate_z(rot.z * delta)
 
 
 func run():
 	set_shader_type()
 
-	if code.text != "" and sel == 0:
-		target_spatial_mesh.visible = false
-		if target_mode == 0:
-			target_icon.visible = true
-			target_icon.material.shader.set_code(code.text)
-			$ui/code_window/ctl/vbox/hbox3/target.text = "Target: Sprite"
-		elif target_mode == 1:
-			target_icon.visible = false
-			canvas.material.shader.set_code(code.text)
-			$ui/code_window/ctl/vbox/hbox3/target.text = "Target: Viewport"
-	elif code.text != "" and sel == 1:
-		if target_mode == 0:
-			target_icon.visible = true
+	if code.text != "":
+		if sel == 0:
 			target_spatial_mesh.visible = false
-			target_spatial_cube.material.shader.set_code(code.text)
-			$ui/code_window/ctl/vbox/hbox3/target.text = "Target: Cube"
-		elif target_mode == 1:
-			target_icon.visible = false
-			target_spatial_mesh.visible = true
-			target_spatial_mesh.mesh.material.shader.set_code(code.text)
-			$ui/code_window/ctl/vbox/hbox3/target.text = "Target: Camera mesh"
-			
+			if target_mode == 0:
+				target_icon.visible = true
+				target_icon.material.shader.set_code(code.text)
+				target_label.text = "Target: Sprite"
+			else:
+				target_icon.visible = false
+				canvas.material.shader.set_code(code.text)
+				target_label.text = "Target: Viewport"
+		else:
+			if target_mode == 0:
+				target_icon.visible = true
+				target_spatial_mesh.visible = false
+				target_spatial_cube.material.shader.set_code(code.text)
+				target_label.text = "Target: Cube"
+			else:
+				target_icon.visible = false
+				target_spatial_mesh.visible = true
+				target_spatial_mesh.mesh.material.shader.set_code(code.text)
+				target_label.text = "Target: Camera mesh"
 
 	update_uniforms_interpreter()
 
 
 func change_rot():
-	var r = randi_range(0, 1000)
-	if r == 1000:
-		rotx = randf_range(-0.3, 0.3)
-		roty = randf_range(-0.3, 0.3)
-		rotz = randf_range(-0.3, 0.3)
+	# Once in a while, pick a new random spin.
+	if randi_range(0, 1000) == 1000:
+		rot = Vector3(randf_range(-0.3, 0.3), randf_range(-0.3, 0.3), randf_range(-0.3, 0.3))
 
 
 func clear_shaders_from_objects():
@@ -111,23 +116,19 @@ func clear_shaders_from_objects():
 
 func save(path):
 	current_file_path = path
-	var content = code.text
 	var file = FileAccess.open(path, FileAccess.WRITE)
-	file.store_string(content)
-	modified_flag = false
+	file.store_string(code.text)
+	modified = false
 
 
 func open(path):
-
 	target_mode = 0
 	uniforms_ui.flush()
 	uniforms_ui.passive_flush()
 
-	var sh = load(path)
-	code.text = sh.get_code()
-	modified_flag = false
+	code.text = load(path).get_code()
+	modified = false
 	current_file_path = path
-
 
 
 func retarget():
@@ -136,16 +137,13 @@ func retarget():
 		target_mode = 1
 		target_spatial_cube.set_flip_faces(false)
 		flip_faces_button.set_pressed(true)
-		
-	elif target_mode == 1:
+	else:
 		target_mode = 0
 		flip_faces_button.set_pressed(false)
 
 
 func update_uniforms_interpreter():
-	if code.text != "" && sel == 0:
-		uniforms = interpreter.go(code.text)
-	elif code.text != "" && sel == 1:
+	if code.text != "":
 		uniforms = interpreter.go(code.text)
 
 	uniforms_ui.register_lines(uniforms)
@@ -153,14 +151,14 @@ func update_uniforms_interpreter():
 
 
 func update_uniforms_ui():
-	for i in uniforms_panel.get_children():
-		i.queue_free()
+	for child in uniforms_panel.get_children():
+		child.queue_free()
 
 	var keys = uniforms_ui.items.keys()
 	keys.sort_custom(func(a, b): return a.naturalnocasecmp_to(b) < 0)
 	for key in keys:
-		var l = uniforms_ui.items[key].draw()
-		uniforms_panel.add_child(l)
+		var control = uniforms_ui.items[key].draw()
+		uniforms_panel.add_child(control)
 
 
 func set_shader_type():
@@ -169,30 +167,37 @@ func set_shader_type():
 	var regex_canvas_item = RegEx.new()
 	regex_spatial.compile("shader_type *spatial")
 	regex_canvas_item.compile("shader_type *canvas_item")
+
 	if regex_canvas_item.search(code.text):
 		sel = 0
-		$ui/code_window/ctl/vbox/hbox3/mode.text = "Canvas item mode"
+		mode_label.text = "Canvas item mode"
 		flip_faces_button.set_disabled(true)
 	elif regex_spatial.search(code.text):
 		sel = 1
+		mode_label.text = "Spatial mode"
 		flip_faces_button.set_disabled(false)
-		$ui/code_window/ctl/vbox/hbox3/mode.text = "Spatial mode"
 
 
 func check_user_dir():
 	copy_dir("res://shaders/examples/", "user://shaders/")
+	save_window.set_root_subfolder("user://shaders")
+	open_window.set_root_subfolder("user://shaders")
 
 
 func copy_dir(source: String, destination: String):
 	DirAccess.make_dir_recursive_absolute(destination)
-	save_window.set_root_subfolder("user://shaders")
-	open_window.set_root_subfolder("user://shaders")
+	var source_dir = DirAccess.open(source)
 
-	var source_dir = DirAccess.open(source);
-	
 	for filename in source_dir.get_files():
-		if FileAccess.file_exists(destination + filename) == false:
+		if not FileAccess.file_exists(destination + filename):
 			source_dir.copy(source + filename, destination + filename)
+
+
+func replace_line_value(stn, line):
+	var text = code.get_line(line - 1)
+	var head = text.split("=")[0] if "=" in text else text.split(";")[0]
+	code.set_line(line - 1, head + "= " + stn)
+	code.grab_focus()
 
 
 func _on_target_pressed():
@@ -201,25 +206,11 @@ func _on_target_pressed():
 
 
 func _on_sending_line_to_update(stn, line):
-	var t = code.get_line(line - 1)
-	var v
-	if "=" in t:
-		v = t.split("=")
-	else:
-		v = t.split(";")
-	code.set_line(line - 1, v[0] + "= " + stn)
-	code.grab_focus()
+	replace_line_value(stn, line)
 
 
 func _on_sending_bool_to_update(stn, line):
-	var t = code.get_line(line - 1)
-	var v
-	if "=" in t:
-		v = t.split("=")
-	else:
-		v = t.split(";")
-	code.set_line(line - 1, v[0] + "= " + stn)
-	code.grab_focus()
+	replace_line_value(stn, line)
 
 
 func _on_sending_mouse_pos_to_update(varname, pos):
@@ -227,114 +218,83 @@ func _on_sending_mouse_pos_to_update(varname, pos):
 
 	if sel == 0:
 		canvas.material.set_shader_parameter(varname, pos)
-	elif sel == 1:
-		if target_mode == 0:
-			target_spatial_cube.material.set_shader_parameter(varname, pos)
-		if target_mode == 1:
-			target_spatial_mesh.mesh.material.set_shader_parameter(varname, pos)
+	elif target_mode == 0:
+		target_spatial_cube.material.set_shader_parameter(varname, pos)
+	else:
+		target_spatial_mesh.mesh.material.set_shader_parameter(varname, pos)
 
 
 func _on_sending_sampler_to_update(varname, sampler):
-	var s
-
 	uniforms_ui.set_passive_ui_state(varname, sampler)
 
-	match sampler:
-		0:
-			s = null
-		1:
-			s = load("res://textures/simple.tres")
-		2:
-			s = load("res://textures/animated.tres")
-		3:
-			s = load("res://textures/gradient.tres")
-		4:
-			s = load("res://textures/noise.tres")
-		5:
-			s = load("res://textures/normal.tres")
-		6:
-			var img = get_viewport().get_texture().get_image()
-			s = ImageTexture.create_from_image(img)
-		_:
-			return
+	var texture = null
+	if sampler in SAMPLER_PATHS:
+		texture = load(SAMPLER_PATHS[sampler])
+	elif sampler == 6:
+		texture = ImageTexture.create_from_image(get_viewport().get_texture().get_image())
+	elif sampler != 0:
+		return
 
 	if sel == 0:
-		canvas.material.set_shader_parameter(varname, s)
-	elif sel == 1:
-		if target_mode == 0:
-			target_spatial_cube.material.set_shader_parameter(varname, s)
-		elif target_mode == 1:
-			target_spatial_mesh.mesh.material.set_shader_parameter(varname, s)
+		canvas.material.set_shader_parameter(varname, texture)
+	elif target_mode == 0:
+		target_spatial_cube.material.set_shader_parameter(varname, texture)
+	else:
+		target_spatial_mesh.mesh.material.set_shader_parameter(varname, texture)
 
 
 func _on_panel_pressed():
-	if side_panel.visible:
-		panel_button.text = "Show panel"
-		side_panel.visible = false
-	else:
-		panel_button.text = "Hide panel"
-		side_panel.visible = true
+	side_panel.visible = not side_panel.visible
+	panel_button.text = "Hide panel" if side_panel.visible else "Show panel"
 
 
 func _on_open_window_file_selected(path):
 	open(path)
 
-	$ui/code_window.set_title("Godot Shaders Sketchbook " + "[ " + path.replace("user://shaders/", "").replace(".gdshader","") + " ]")
-	$ui/code_window/ctl/vbox/VBoxContainer/hbox4/save.set_disabled(false)
+	var shader_name = path.replace("user://shaders/", "").replace(".gdshader", "")
+	code_window.set_title("Godot Shaders Sketchbook [ %s ]" % shader_name)
+	save_button.set_disabled(false)
 	run()
 
 
 func _on_open_pressed():
-	if modified_flag == true:
+	if modified:
 		$ui/code_window/open_confirm.visible = true
 	else:
 		_on_open_confirm_confirmed()
-		
 
 
 func _on_open_confirm_confirmed():
-	if open_window.visible:
-		open_window.visible = false
-	else:
-		open_window.visible = true
-	
+	open_window.visible = not open_window.visible
 
 
 func _on_save_as_pressed():
-	if save_window.visible:
-		save_window.visible = false
-	else:
-		save_window.visible = true
-		if current_file_path != null:
-			save_window.set_current_path(current_file_path)
+	save_window.visible = not save_window.visible
+	if save_window.visible and current_file_path != null:
+		save_window.set_current_path(current_file_path)
 
 
 func _on_save_window_file_selected(path):
 	save(path)
-	$ui/code_window/ctl/vbox/VBoxContainer/hbox4/save.set_disabled(false)
+	save_button.set_disabled(false)
 
 
 func _on_new_pressed():
-	if modified_flag == true:
+	if modified:
 		$ui/code_window/new_confirm.visible = true
 	else:
 		_on_new_confirm_confirmed()
 
 
 func _on_new_confirm_confirmed():
-	$ui/code_window/ctl/vbox/VBoxContainer/hbox4/save.set_disabled(true)
+	save_button.set_disabled(true)
 	clear_shaders_from_objects()
-
-	if sel == 0:
-		open(def_canvas)
-	elif sel == 1:
-		open(def_spatial)
-		
+	open(DEF_CANVAS if sel == 0 else DEF_SPATIAL)
 	run()
 
 
 func _on_check_toggled(toggled_on):
-	rotation = toggled_on
+	auto_rotate = toggled_on
 
 
 func _on_fog_toggled(toggled_on):
@@ -350,7 +310,7 @@ func _on_spin_box_value_changed(value):
 
 
 func _on_code_text_changed():
-	modified_flag = true
+	modified = true
 	run()
 	debug_label.update_debug()
 
@@ -360,35 +320,25 @@ func _on_about_pressed():
 
 
 func _on_error_raised(line_number):
-	code_ok = false
-	if sel == 0:
-		warning.texture = img_fail
-		code.clear_executing_lines()
-		code.set_line_as_executing(line_number - 1, true)
-	elif sel == 1:
-		warning.texture = img_fail
-		code.clear_executing_lines()
-		code.set_line_as_executing(line_number - 1, true)
+	warning.texture = img_fail
+	code.clear_executing_lines()
+	code.set_line_as_executing(line_number - 1, true)
 
 
 func _on_ok_raised():
-	code_ok = true
 	warning.texture = img_ok
 	code.clear_executing_lines()
 
 
 func _on_save_pressed():
-	modified_flag = false
+	modified = false
 	if current_file_path != null:
 		save(current_file_path)
 
 
 func _on_flip_z_toggled(toggled_on):
-	if sel == 0:
-		pass
 	if sel == 1:
 		if target_mode == 0:
 			target_spatial_cube.set_flip_faces(toggled_on)
-		if target_mode == 1:
+		else:
 			target_spatial_mesh.mesh.set_flip_faces(not toggled_on)
-			

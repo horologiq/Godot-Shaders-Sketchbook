@@ -1,5 +1,5 @@
 class_name UniformsInterpreter
-extends Node
+extends RefCounted
 
 
 class Line:
@@ -9,55 +9,50 @@ class Line:
 	var tokens = []
 
 	func _init(l, s, w):
-		self.line_number = l
-		self.original_string = s
-		self.words = w
+		line_number = l
+		original_string = s
+		words = w
 
 
 class Token:
 	var line_number
-	var type  # DATATYPE, VARNAME, HINT, VARVALUE
+	var type  # DATATYPE, VARNAME, HINT, HINTVALUE or VARVALUE
 	var value
 	var pos
 
 	func _init(l, t, v, p):
-		self.line_number = l
-		self.type = t
-		self.value = v
-		self.pos = p
+		line_number = l
+		type = t
+		value = v
+		pos = p
 
 
 class Lexer:
+	# Hints whose arguments should be captured as HINTVALUE tokens.
+	const HINTS_WITH_VALUES = ["hint_range", "hint_roughness", "filter", "repeat"]
+
 	var g = Grammar.new()
+	var number_regex = RegEx.new()
+
+	func _init():
+		number_regex.compile("^[0-9.-]*$")
 
 	func create(text):
-		var regex = RegEx.new()
-		regex.compile("uniform ")
-
 		var result = []
 		var counter = 1
 
-		for i in text.split("\n"):
-			if regex.search(i):
-				var words = (
-					i
-					. replace("=", " = ")
-					. replace(":", " : ")
-					. replace("(", " ( ")
-					. replace(")", " ) ")
-					. replace(";", " ; ")
-					. replace(",", " , ")
-					. replace("  ", " ")
-					. split(" ")
-				)
+		for raw_line in text.split("\n"):
+			if "uniform " in raw_line:
+				var words = (raw_line
+					.replace("=", " = ")
+					.replace(":", " : ")
+					.replace("(", " ( ")
+					.replace(")", " ) ")
+					.replace(";", " ; ")
+					.replace(",", " , ")
+					.split(" ", false))
 
-				var c = 0
-				for w in words:
-					if " " in w or w == "":
-						words.remove_at(c)
-					c += 1
-
-				var line = Line.new(counter, i, words)
+				var line = Line.new(counter, raw_line, words)
 				check_words(line)
 				result.append(line)
 			counter += 1
@@ -66,109 +61,62 @@ class Lexer:
 
 	func check_words(l):
 		var size = l.words.size()
-		var v = []
-		var regex = RegEx.new()
-		regex.compile("^[0-9.-]*$")
-		var pos = 0
 
-		if l.words[0] == "uniform":
-			if size > 1:
-				if l.words[1] in g.TT_DATATYPES:
-					pos += 1
-					l.tokens.append(Token.new(l.line_number, "DATATYPE", l.words[1], pos))
-					if size > 2:
+		if l.words[0] != "uniform" or size < 2 or not l.words[1] in g.TT_DATATYPES:
+			return
+
+		var pos = 1
+		l.tokens.append(Token.new(l.line_number, "DATATYPE", l.words[1], pos))
+		if size < 3:
+			return
+
+		pos += 1
+		l.tokens.append(Token.new(l.line_number, "VARNAME", l.words[2], pos))
+		if size < 4:
+			return
+
+		match l.words[3]:
+			"=":
+				append_value_tokens(l, l.words.slice(4), pos)
+			":":
+				check_hints(l, pos)
+
+	func check_hints(l, pos):
+		var size = l.words.size()
+
+		for i in range(4, size):
+			if l.words[i] == "=":
+				append_value_tokens(l, l.words.slice(i + 1), pos)
+				return
+
+			if l.words[i] in g.TT_HINTS:
+				pos += 1
+				l.tokens.append(Token.new(l.line_number, "HINT", l.words[i], pos))
+
+				if not l.words[i] in HINTS_WITH_VALUES:
+					continue
+
+				for b in range(i + 1, size):
+					if l.words[b] == "=":
+						append_value_tokens(l, l.words.slice(b), pos)
+						break
+					if number_regex.search(l.words[b]):
 						pos += 1
-						l.tokens.append(Token.new(l.line_number, "VARNAME", l.words[2], pos))
-						if size > 3:
-							var c = 3
-							v = []
-							match l.words[c]:
-								":":
-									for i in range(c + 1, size):
-										if l.words[i] == "=":
-											for j in range(i + 1, size):
-												v.append(l.words[j])
-											var val = look_for_values(v)
-											for j in range(0, val.size()):
-												pos += 1
-												l.tokens.append(
-													Token.new(
-														l.line_number, "VARVALUE", val[j], pos
-													)
-												)
-											break
-										elif l.words[i] in g.TT_HINTS:
-											pos += 1
-											l.tokens.append(
-												Token.new(l.line_number, "HINT", l.words[i], pos)
-											)
-											if (
-												l.words[i]
-												in [
-													"hint_range",
-													"hint_roughness",
-													"filter",
-													"repeat"
-												]
-											):
-												for b in range(i + 1, size):
-													if l.words[b] == "=":
-														for j in range(b, size):
-															v.append(l.words[j])
-														var val = look_for_values(v)
-														for j in range(0, val.size()):
-															pos += 1
-															l.tokens.append(
-																Token.new(
-																	l.line_number,
-																	"VARVALUE",
-																	val[j],
-																	pos
-																)
-															)
-														break
-													if regex.search(l.words[b]):
-														pos += 1
-														l.tokens.append(
-															Token.new(
-																l.line_number,
-																"HINTVALUE",
-																l.words[b],
-																pos
-															)
-														)
-												break
-										else:
-											pass
-								"=":
-									for j in range(c + 1, size):
-										v.append(l.words[j])
-									var val = look_for_values(v)
-									for j in range(0, val.size()):
-										pos += 1
-										l.tokens.append(
-											Token.new(l.line_number, "VARVALUE", val[j], pos)
-										)
-								";":
-									return
-								_:
-									return
+						l.tokens.append(Token.new(l.line_number, "HINTVALUE", l.words[b], pos))
+				return
 
-	func look_for_values(v):
-		var regex = RegEx.new()
-		regex.compile("^[0-9.-]*$")
-		var size = v.size()
+	func append_value_tokens(l, words, pos):
+		for value in look_for_values(words):
+			pos += 1
+			l.tokens.append(Token.new(l.line_number, "VARVALUE", value, pos))
+
+	func look_for_values(words):
 		var result = []
-
-		if size > 0:
-			for i in range(size):
-				if regex.search(v[i]) or v[i] == "true" or v[i] == "false":
-					result.append(v[i])
-
+		for word in words:
+			if number_regex.search(word) or word == "true" or word == "false":
+				result.append(word)
 		return result
 
 
 func go(text):
-	var l = Lexer.new()
-	var result = l.create(text)
-	return result
+	return Lexer.new().create(text)
